@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>狗岛 DogIsle | 快乐的宠物综合社区</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Google Fonts: 圆润可爱的字体 Nunito 和 Noto Sans SC -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&family=Noto+Sans+SC:wght@400;700;900&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Nunito', 'Noto Sans SC', 'sans-serif'],
+                        display: ['Nunito', 'Noto Sans SC', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            bg: '#EBF4F6',      // 天空蓝 (插画背景)
+                            text: '#2C2422',    // 深咖啡/描边色
+                            accent: '#F29C52',  // 活力橙 (木牌/星星色)
+                            accentHover: '#E58A40',
+                            sand: '#FEF6E4',    // 沙滩米黄
+                            blue: '#98D0E3',    // 海浪蓝
+                            white: '#FFFFFF'
+                        }
+                    },
+                    boxShadow: {
+                        // 漫画风硬阴影
+                        'comic': '6px 6px 0px #2C2422',
+                        'comic-sm': '4px 4px 0px #2C2422',
+                        'comic-hover': '2px 2px 0px #2C2422',
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'float': 'float 4s ease-in-out infinite',
+                        'float-delayed': 'float 4s ease-in-out 2s infinite',
+                        'bounce-slow': 'bounce 3s infinite',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(30px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-15px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* 平滑滚动 */
+        html { scroll-behavior: smooth; }
+        
+        /* 文本选择颜色 */
+        ::selection {
+            background-color: #F29C52;
+            color: #FFFFFF;
+        }
+        
+        /* 滚动揭示动画 */
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.6s ease-out, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 自定义可爱风滚动条 */
+        ::-webkit-scrollbar { width: 12px; }
+        ::-webkit-scrollbar-track { background: #EBF4F6; border-left: 2px solid #2C2422; }
+        ::-webkit-scrollbar-thumb { background: #F29C52; border-left: 2px solid #2C2422; border-bottom: 2px solid #2C2422; border-radius: 6px; }
+        ::-webkit-scrollbar-thumb:hover { background: #E58A40; }
+        
+        /* 隐藏波浪线背景 */
+        .bg-waves {
+            background-image: radial-gradient(circle at 100% 50%, transparent 20%, rgba(254, 246, 228, 0.3) 21%, rgba(254, 246, 228, 0.3) 34%, transparent 35%, transparent),
+                              radial-gradient(circle at 0% 50%, transparent 20%, rgba(254, 246, 228, 0.3) 21%, rgba(254, 246, 228, 0.3) 34%, transparent 35%, transparent);
+            background-size: 40px 40px;
+        }
+    </style>
+</head>
+<body class="bg-brand-bg text-brand-text font-sans antialiased overflow-x-hidden selection:bg-brand-accent selection:text-white">
+
+    <!-- 顶部导航栏 -->
+    <nav class="fixed top-0 w-full z-50 transition-all duration-300 bg-brand-bg/90 backdrop-blur-md border-b-4 border-brand-text">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 h-20 flex items-center justify-between">
+            <!-- Logo -->
+            <div class="flex items-center gap-3 cursor-pointer group">
+                <div class="w-10 h-10 bg-brand-sand border-2 border-brand-text rounded-full flex items-center justify-center shadow-comic-sm group-hover:-translate-y-1 group-hover:shadow-comic transition-all">
+                    <!-- 小狗爪印 Logo -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="text-brand-text">
+                        <path d="M10 5.172C10 3.782 8.423 2.679 6.5 3c-2.823.47-4.113 6.006-4 7 .08.703 1.725 1.722 3.656 1 1.261-.472 1.969-1.45 2.344-2.5"/><path d="M14.267 5.172c0-1.39 1.577-2.493 3.5-2.172 2.823.47 4.113 6.006 4 7-.08.703-1.725 1.722-3.656 1-1.261-.472-1.855-1.45-2.23-2.5"/><path d="M8 14v.5"/><path d="M16 14v.5"/><path d="M11.25 16.25h1.5L12 17l-.75-.75Z"/><path d="M4.42 11.247A13.152 13.152 0 0 0 4 14.556C4 18.728 7.582 21 12 21s8-2.272 8-6.444c0-1.061-.162-2.2-.493-3.309m-9.243-6.082A8.801 8.801 0 0 1 12 5c.78 0 1.5.108 2.161.306"/>
+                    </svg>
+                </div>
+                <span class="font-display font-black text-2xl tracking-wide mt-1">DogIsle</span>
+            </div>
+
+            <!-- 桌面端菜单 -->
+            <div class="hidden md:flex items-center space-x-8 text-base font-bold">
+                <a href="#community" data-i18n="navCommunity" class="hover:text-brand-accent hover:-translate-y-0.5 transition-transform">毛孩社区</a>
+                <a href="#market" data-i18n="navMarket" class="hover:text-brand-accent hover:-translate-y-0.5 transition-transform">岛屿集市</a>
+                <a href="#shop" data-i18n="navShop" class="hover:text-brand-accent hover:-translate-y-0.5 transition-transform">精选商城</a>
+                <a href="#trade" data-i18n="navTrade" class="hover:text-brand-accent hover:-translate-y-0.5 transition-transform">闲置交易</a>
+            </div>
+
+            <!-- 右侧操作区 -->
+            <div class="flex items-center space-x-4">
+                <!-- 语言切换按钮 -->
+                <button id="langToggle" onclick="toggleLanguage()" class="text-sm font-black bg-white border-2 border-brand-text rounded-full w-10 h-10 flex items-center justify-center hover:bg-brand-sand transition-colors shadow-comic-sm hover:shadow-comic-hover hover:translate-y-[2px]">
+                    EN
+                </button>
+                <button class="hidden md:block px-6 py-2 bg-brand-accent text-brand-text border-2 border-brand-text rounded-full text-base font-black hover:bg-brand-accentHover transition-all shadow-comic hover:shadow-comic-hover hover:translate-y-[2px]">
+                    <span data-i18n="navExplore">下载 App</span>
+                </button>
+                <!-- 移动端菜单按钮 -->
+                <button id="mobileMenuBtn" class="md:hidden flex items-center justify-center w-10 h-10 bg-white border-2 border-brand-text rounded-full shadow-comic-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 移动端菜单遮罩层 -->
+    <div id="mobileMenu" class="fixed inset-0 bg-brand-blue/95 backdrop-blur-md z-40 flex flex-col items-center justify-center space-y-8 opacity-0 pointer-events-none transition-all duration-300 border-x-4 border-brand-text">
+        <a href="#community" onclick="toggleMobileMenu()" data-i18n="navCommunity" class="text-3xl font-black text-brand-text hover:text-white transition-colors hover:scale-110 transform">毛孩社区</a>
+        <a href="#market" onclick="toggleMobileMenu()" data-i18n="navMarket" class="text-3xl font-black text-brand-text hover:text-white transition-colors hover:scale-110 transform">岛屿集市</a>
+        <a href="#shop" onclick="toggleMobileMenu()" data-i18n="navShop" class="text-3xl font-black text-brand-text hover:text-white transition-colors hover:scale-110 transform">精选商城</a>
+        <a href="#trade" onclick="toggleMobileMenu()" data-i18n="navTrade" class="text-3xl font-black text-brand-text hover:text-white transition-colors hover:scale-110 transform">闲置交易</a>
+    </div>
+
+    <!-- 首屏 Hero Section -->
+    <section class="relative w-full min-h-screen flex items-center pt-20 overflow-hidden bg-waves">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10 py-12">
+            
+            <!-- 左侧：文案区 -->
+            <div class="opacity-0 animate-fade-in-up flex flex-col items-start text-center lg:text-left order-2 lg:order-1" style="animation-delay: 0.1s;">
+                <!-- 品牌标签 -->
+                <div class="inline-flex items-center space-x-2 px-4 py-2 rounded-full border-2 border-brand-text bg-white shadow-comic-sm mb-8 mx-auto lg:mx-0 transform -rotate-2 hover:rotate-0 transition-transform">
+                    <span class="text-xs sm:text-sm font-black text-brand-accent tracking-widest uppercase" data-i18n="heroTag">Pets & Lifestyle Platform</span>
+                </div>
+
+                <!-- 标题 -->
+                <h1 class="font-display text-5xl sm:text-6xl md:text-7xl font-black leading-tight mb-6 text-brand-text drop-shadow-md">
+                    <span data-i18n="heroTitle">欢迎登陆</span><br/>
+                    <span class="text-brand-accent relative inline-block">
+                        <span class="relative z-10">DogIsle</span>
+                        <svg class="absolute w-full h-4 -bottom-1 left-0 text-brand-blue z-0" viewBox="0 0 100 20" preserveAspectRatio="none"><path d="M0,10 C30,20 70,0 100,10 L100,20 L0,20 Z" fill="currentColor" opacity="0.5"></path></svg>
+                    </span>
+                    <span data-i18n="heroTitleEnd">狗岛！</span>
+                </h1>
+
+                <!-- 描述 -->
+                <p data-i18n="heroDesc" class="text-lg md:text-xl text-brand-text/80 leading-relaxed mb-10 max-w-lg mx-auto lg:mx-0 font-bold">
+                    在这里，不仅能结交有趣的养宠主理人，还能逛集市、淘二手装备、购买独立设计的宠物好物。与毛孩子一起，开启岛屿新生活。
+                </p>
+
+                <!-- 按钮组 -->
+                <div class="flex flex-col sm:flex-row items-center gap-6 mx-auto lg:mx-0 w-full sm:w-auto">
+                    <button class="w-full sm:w-auto px-8 py-4 bg-brand-accent text-brand-text border-4 border-brand-text rounded-2xl text-lg font-black hover:bg-brand-accentHover transition-all shadow-comic hover:shadow-comic-hover hover:translate-y-[2px] flex items-center justify-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><path d="M3 6h18"></path><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                        <span data-i18n="btnShop">去逛逛商城</span>
+                    </button>
+                    
+                    <button class="w-full sm:w-auto px-8 py-4 bg-white text-brand-text border-4 border-brand-text rounded-2xl text-lg font-black hover:bg-brand-sand transition-all shadow-comic hover:shadow-comic-hover hover:translate-y-[2px] flex items-center justify-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                        <span data-i18n="btnPost">发条新动态</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 右侧：核心插画图 -->
+            <div class="relative order-1 lg:order-2 opacity-0 animate-fade-in-up" style="animation-delay: 0.3s;">
+                <!-- 装饰星星 -->
+                <div class="absolute -top-6 -left-6 w-12 h-12 text-brand-accent animate-spin-slow">
+                     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z"/></svg>
+                </div>
+                <!-- 主图容器 -->
+                <div class="relative w-full aspect-square md:aspect-[4/3] rounded-[2.5rem] md:rounded-[3rem] border-4 md:border-8 border-brand-text overflow-hidden shadow-comic bg-brand-sand transform rotate-2 hover:rotate-0 transition-transform duration-500 animate-float">
+                    <img 
+                        src="dogisle7.jpg" 
+                        alt="DogIsle 家族大合影" 
+                        class="w-full h-full object-cover object-center"
+                    />
+                </div>
+                <!-- 漂浮的小骨头装饰 -->
+                <div class="absolute -bottom-8 -right-4 bg-white border-4 border-brand-text rounded-full p-3 shadow-comic animate-float-delayed z-20 transform rotate-12">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor" class="text-brand-text"><path d="M10 5.172C10 3.782 8.423 2.679 6.5 3c-2.823.47-4.113 6.006-4 7 .08.703 1.725 1.722 3.656 1 1.261-.472 1.969-1.45 2.344-2.5"/><path d="M14.267 5.172c0-1.39 1.577-2.493 3.5-2.172 2.823.47 4.113 6.006 4 7-.08.703-1.725 1.722-3.656 1-1.261-.472-1.855-1.45-2.23-2.5"/><path d="M8 14v.5"/><path d="M16 14v.5"/><path d="M11.25 16.25h1.5L12 17l-.75-.75Z"/><path d="M4.42 11.247A13.152 13.152 0 0 0 4 14.556C4 18.728 7.582 21 12 21s8-2.272 8-6.444c0-1.061-.162-2.2-.493-3.309m-9.243-6.082A8.801 8.801 0 0 1 12 5c.78 0 1.5.108 2.161.306"/></svg>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 底部波浪形分隔 -->
+        <div class="absolute bottom-0 w-full overflow-hidden leading-none z-20 translate-y-[2px]">
+            <svg class="relative block w-[calc(100%+1.3px)] h-16 md:h-24" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C59.71,118.08,130.83,123.8,188.4,107.4,233.19,94.59,277.89,75.31,321.39,56.44Z" fill="#FEF6E4" stroke="#2C2422" stroke-width="4"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- 宠物社区 Section -->
+    <section id="community" class="py-24 md:py-32 w-full bg-brand-sand relative z-10 reveal-on-scroll border-b-4 border-brand-text">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 text-center">
+            <span data-i18n="communityTag" class="inline-block px-4 py-2 bg-brand-blue border-2 border-brand-text rounded-full text-brand-text font-black text-sm mb-6 shadow-comic-sm transform -rotate-2">社交圈子</span>
+            <h2 data-i18n="communityTitle" class="font-display text-4xl md:text-5xl font-black mb-8 text-brand-text">汪星人的专属朋友圈</h2>
+            <div class="max-w-3xl mx-auto bg-white border-4 border-brand-text rounded-3xl p-8 md:p-12 shadow-comic text-left relative transform rotate-1">
+                <!-- 胶带装饰 -->
+                <div class="absolute -top-4 left-1/2 -translate-x-1/2 w-32 h-8 bg-brand-accent/50 border-2 border-brand-text transform -rotate-3 opacity-80 mix-blend-multiply"></div>
+                
+                <p data-i18n="communityP1" class="text-brand-text text-lg md:text-xl leading-relaxed mb-6 font-bold">分享每天的遛狗路线、治愈瞬间和搞怪表情包。在这里，每一次摇尾巴都能收获无数点赞，每一个养宠难题都能得到热心主理人的解答。</p>
+                <p data-i18n="communityP2" class="text-brand-text text-lg md:text-xl leading-relaxed mb-8 font-bold">加入同城社群，相约周末草坪派对，或者只是安静地翻看其他岛民的养宠日记。在狗岛，没人会觉得你晒狗太频繁。</p>
+                
+                <a href="#" class="inline-flex items-center gap-2 text-brand-accent font-black hover:text-brand-accentHover transition-colors group text-lg">
+                    <span data-i18n="communityBtn">进入社区论坛</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="transform group-hover:translate-x-2 transition-transform"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 岛屿集市 & 商城 Section -->
+    <section id="market" class="py-24 bg-brand-bg w-full relative z-10 reveal-on-scroll border-b-4 border-brand-text">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="text-center mb-16">
+                <span data-i18n="marketTag" class="inline-block px-4 py-2 bg-white border-2 border-brand-text rounded-full text-brand-text font-black text-sm mb-6 shadow-comic-sm transform rotate-2">好物大赏</span>
+                <h2 data-i18n="marketTitle" class="font-display text-4xl md:text-5xl font-black mb-4">把最好的带给毛孩</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+                <!-- Card 1 -->
+                <div class="bg-white border-4 border-brand-text p-8 rounded-[2rem] shadow-comic hover:-translate-y-2 hover:shadow-comic-hover transition-all duration-300 relative mt-8 md:mt-0">
+                    <div class="absolute -top-6 left-8 w-14 h-14 rounded-full bg-brand-accent border-4 border-brand-text flex items-center justify-center font-display font-black text-2xl text-white transform -rotate-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"></path><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                    </div>
+                    <h3 data-i18n="shop1Title" class="text-2xl font-black mb-4 mt-4">独立设计师周边</h3>
+                    <p data-i18n="shop1Desc" class="text-brand-text/80 font-bold leading-relaxed text-lg">发掘小众又好看的牵引绳、狗牌和手工项圈。每件原创单品都能让你的狗狗成为街上最靓的仔。</p>
+                </div>
+                <!-- Card 2 -->
+                <div class="bg-brand-sand border-4 border-brand-text p-8 rounded-[2rem] shadow-comic hover:-translate-y-2 hover:shadow-comic-hover transition-all duration-300 relative mt-8 md:mt-12">
+                    <div class="absolute -top-6 left-8 w-14 h-14 rounded-full bg-brand-blue border-4 border-brand-text flex items-center justify-center font-display font-black text-2xl text-brand-text transform rotate-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 12H16c-.7 2-2 3-4 3s-3.3-1-4-3H2.5"/><path d="M5.5 5.1L2 12v6c0 1.1.9 2 2 2h16a2 2 0 0 0 2-2v-6l-3.4-6.9A2 2 0 0 0 16.8 4H7.2a2 2 0 0 0-1.8 1.1z"/></svg>
+                    </div>
+                    <h3 data-i18n="shop2Title" class="text-2xl font-black mb-4 mt-4">自营健康鲜粮</h3>
+                    <p data-i18n="shop2Desc" class="text-brand-text/80 font-bold leading-relaxed text-lg">狗岛严格选品的自营健康零食与主粮。透明成分配料表，拒绝智商税，每一口都是安心。</p>
+                </div>
+                <!-- Card 3 -->
+                <div class="bg-white border-4 border-brand-text p-8 rounded-[2rem] shadow-comic hover:-translate-y-2 hover:shadow-comic-hover transition-all duration-300 relative mt-8 md:mt-6">
+                    <div class="absolute -top-6 left-8 w-14 h-14 rounded-full bg-brand-text border-4 border-brand-text flex items-center justify-center font-display font-black text-2xl text-white transform -rotate-12">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/><path d="M22 7v3a2 2 0 0 1-2 2v0a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12v0a2 2 0 0 1-2-2V7"/></svg>
+                    </div>
+                    <h3 data-i18n="shop3Title" class="text-2xl font-black mb-4 mt-4">创意文创集市</h3>
+                    <p data-i18n="shop3Desc" class="text-brand-text/80 font-bold leading-relaxed text-lg">除了狗狗用品，这里还有主理人们手工制作的帆布袋、贴纸和插画。支持手作，传递温度。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 闲置交易 Section -->
+    <section id="trade" class="py-24 md:py-32 w-full bg-brand-blue relative z-10 reveal-on-scroll">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="bg-white rounded-[3rem] p-8 md:p-16 flex flex-col md:flex-row items-center justify-between gap-12 border-4 border-brand-text shadow-comic relative overflow-hidden">
+                
+                <div class="max-w-lg relative z-10">
+                    <span data-i18n="tradeTag" class="inline-block px-4 py-2 bg-brand-accent border-2 border-brand-text rounded-full text-brand-text font-black text-sm mb-6 shadow-comic-sm">环保循环圈</span>
+                    <h2 data-i18n="tradeTitle" class="font-display text-4xl md:text-5xl font-black mb-6 text-brand-text">闲置物品的奇妙漂流</h2>
+                    <p data-i18n="tradeDesc" class="text-brand-text text-lg leading-relaxed mb-8 font-bold">狗狗长得太快穿不下的胸背带？买来却不爱玩的漏食球？在狗岛二手交易区，让你的闲置物品流转到下一只小狗的爪中。低碳、省钱，还能交个朋友！</p>
+                    <button class="px-8 py-4 bg-brand-text text-white border-4 border-brand-text rounded-2xl text-lg font-black hover:bg-brand-text/90 transition-transform hover:-translate-y-1 shadow-comic flex items-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
+                        <span data-i18n="btnPublish">发布闲置物品</span>
+                    </button>
+                </div>
+                <!-- 闲置物品商品卡片插画悬浮区域 -->
+                <div class="relative w-full max-w-sm aspect-[4/3] hidden md:block z-10">
+                    <div class="absolute top-4 right-6 w-64 h-32 bg-brand-sand border-4 border-brand-text rounded-2xl shadow-comic transform rotate-12 flex flex-col justify-between p-5 hover:rotate-6 hover:scale-105 transition-all duration-300 cursor-pointer animate-float">
+                        <div class="flex justify-between items-start border-b-4 border-brand-text pb-2 border-dashed">
+                            <div class="font-display font-black text-xl">幼犬胸背带</div>
+                            <div class="text-sm font-bold bg-white border-2 border-brand-text px-2 py-1 rounded-md text-brand-accent">9成新</div>
+                        </div>
+                        <div class="flex justify-between items-end">
+                            <span class="font-black text-xl text-brand-text">¥ 25.00</span>
+                            <span class="text-sm font-bold opacity-60">来自: 大骨头包子</span>
+                        </div>
+                    </div>
+                    
+                    <div class="absolute bottom-0 left-0 w-64 h-32 bg-brand-accent border-4 border-brand-text rounded-2xl shadow-comic transform -rotate-6 flex flex-col justify-between p-5 hover:-rotate-12 hover:scale-105 transition-all duration-300 cursor-pointer animate-float" style="animation-delay: 1s;">
+                        <div class="flex justify-between items-start border-b-4 border-brand-text pb-2 border-dashed">
+                            <div class="font-display font-black text-xl text-white">闲置狗狗飞盘</div>
+                            <div class="text-sm font-bold bg-white border-2 border-brand-text px-2 py-1 rounded-md text-brand-text">仅玩一次</div>
+                        </div>
+                        <div class="flex justify-between items-end text-white">
+                            <span class="font-black text-xl">交换 / 赠送</span>
+                            <span class="text-sm font-bold opacity-80">来自: 柯基嘟嘟</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 底部 Footer -->
+    <footer class="bg-brand-text text-white border-t-4 border-brand-text py-16 w-full relative z-10 reveal-on-scroll">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-white border-4 border-brand-text rounded-full flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="text-brand-text">
+                        <path d="M10 5.172C10 3.782 8.423 2.679 6.5 3c-2.823.47-4.113 6.006-4 7 .08.703 1.725 1.722 3.656 1 1.261-.472 1.969-1.45 2.344-2.5"/><path d="M14.267 5.172c0-1.39 1.577-2.493 3.5-2.172 2.823.47 4.113 6.006 4 7-.08.703-1.725 1.722-3.656 1-1.261-.472-1.855-1.45-2.23-2.5"/><path d="M8 14v.5"/><path d="M16 14v.5"/><path d="M11.25 16.25h1.5L12 17l-.75-.75Z"/><path d="M4.42 11.247A13.152 13.152 0 0 0 4 14.556C4 18.728 7.582 21 12 21s8-2.272 8-6.444c0-1.061-.162-2.2-.493-3.309m-9.243-6.082A8.801 8.801 0 0 1 12 5c.78 0 1.5.108 2.161.306"/>
+                    </svg>
+                </div>
+                <span class="font-display font-black text-2xl tracking-wide">DogIsle</span>
+            </div>
+            <div class="flex gap-8 text-base font-bold text-white/80">
+                <!-- App Store 带悬浮二维码 -->
+                <a href="#" class="relative group hover:text-brand-accent transition-colors block">
+                    <span class="inline-block transform transition-transform group-hover:-translate-y-1">App Store</span>
+                    <!-- 二维码弹窗 -->
+                    <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-32 bg-white rounded-2xl shadow-comic p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-y-2 group-hover:translate-y-0 pointer-events-none z-50 border-4 border-brand-text flex flex-col items-center text-center">
+                        <div class="w-full aspect-square bg-brand-sand rounded-xl flex items-center justify-center border-2 border-brand-text mb-2">
+                            <!-- 二维码占位 SVG -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-brand-text"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg>
+                        </div>
+                        <span class="text-brand-text text-xs font-black leading-none" data-i18n="qrAppStore">扫码下载</span>
+                        <!-- 指示箭头 -->
+                        <div class="absolute -bottom-[10px] left-1/2 -translate-x-1/2 w-4 h-4 bg-white transform rotate-45 border-b-4 border-r-4 border-brand-text"></div>
+                    </div>
+                </a>
+
+                <!-- 小程序 带悬浮二维码 -->
+                <a href="#" class="relative group hover:text-brand-accent transition-colors block">
+                    <span class="inline-block transform transition-transform group-hover:-translate-y-1">小程序</span>
+                    <!-- 二维码弹窗 -->
+                    <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-32 bg-white rounded-2xl shadow-comic p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-y-2 group-hover:translate-y-0 pointer-events-none z-50 border-4 border-brand-text flex flex-col items-center text-center">
+                        <div class="w-full aspect-square bg-brand-sand rounded-xl flex items-center justify-center border-2 border-brand-text mb-2">
+                            <!-- 二维码占位 SVG -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-brand-text"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg>
+                        </div>
+                        <span class="text-brand-text text-xs font-black leading-none" data-i18n="qrMiniProgram">扫码访问</span>
+                        <!-- 指示箭头 -->
+                        <div class="absolute -bottom-[10px] left-1/2 -translate-x-1/2 w-4 h-4 bg-white transform rotate-45 border-b-4 border-r-4 border-brand-text"></div>
+                    </div>
+                </a>
+
+                <a href="#" class="group hover:text-brand-accent transition-colors block">
+                    <span class="inline-block transform transition-transform group-hover:-translate-y-1">关于我们</span>
+                </a>
+            </div>
+            <p class="text-sm font-bold text-white/50">© 2024 DogIsle Platform. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- 国际化与交互脚本 -->
+    <script>
+        const i18nData = {
+            zh: {
+                pageTitle: "狗岛 DogIsle | 快乐的宠物综合社区",
+                navCommunity: "毛孩社区",
+                navMarket: "岛屿集市",
+                navShop: "精选商城",
+                navTrade: "闲置交易",
+                navExplore: "下载 App",
+                heroTag: "Pets & Lifestyle Platform",
+                heroTitle: "欢迎登陆",
+                heroTitleEnd: "狗岛！",
+                heroDesc: "在这里，不仅能结交有趣的养宠主理人，还能逛集市、淘二手装备、购买独立设计的宠物好物。与毛孩子一起，开启岛屿新生活。",
+                btnShop: "去逛逛商城",
+                btnPost: "发条新动态",
+                
+                communityTag: "社交圈子",
+                communityTitle: "汪星人的专属朋友圈",
+                communityP1: "分享每天的遛狗路线、治愈瞬间和搞怪表情包。在这里，每一次摇尾巴都能收获无数点赞，每一个养宠难题都能得到热心主理人的解答。",
+                communityP2: "加入同城社群，相约周末草坪派对，或者只是安静地翻看其他岛民的养宠日记。在狗岛，没人会觉得你晒狗太频繁。",
+                communityBtn: "进入社区论坛",
+                
+                marketTag: "好物大赏",
+                marketTitle: "把最好的带给毛孩",
+                shop1Title: "独立设计师周边",
+                shop1Desc: "发掘小众又好看的牵引绳、狗牌和手工项圈。每件原创单品都能让你的狗狗成为街上最靓的仔。",
+                shop2Title: "自营健康鲜粮",
+                shop2Desc: "狗岛严格选品的自营健康零食与主粮。透明成分配料表，拒绝智商税，每一口都是安心。",
+                shop3Title: "创意文创集市",
+                shop3Desc: "除了狗狗用品，这里还有主理人们手工制作的帆布袋、贴纸和插画。支持手作，传递温度。",
+                
+                tradeTag: "环保循环圈",
+                tradeTitle: "闲置物品的奇妙漂流",
+                tradeDesc: "狗狗长得太快穿不下的胸背带？买来却不爱玩的漏食球？在狗岛二手交易区，让你的闲置物品流转到下一只小狗的爪中。低碳、省钱，还能交个朋友！",
+                btnPublish: "发布闲置物品",
+                qrAppStore: "扫码下载",
+                qrMiniProgram: "扫码访问"
+            },
+            en: {
+                pageTitle: "DogIsle | Comprehensive Pet Community",
+                navCommunity: "Community",
+                navMarket: "Market",
+                navShop: "Shop",
+                navTrade: "Second-hand",
+                navExplore: "Download App",
+                heroTag: "Pets & Lifestyle Platform",
+                heroTitle: "Welcome to",
+                heroTitleEnd: "!",
+                heroDesc: "Here, you can meet fun pet owners, explore the creative market, trade second-hand gears, and buy indie-designed pet goods. Start a new island life with your fur kids.",
+                btnShop: "Visit Shop",
+                btnPost: "Post Update",
+                
+                communityTag: "Social Circle",
+                communityTitle: "Exclusive Friends Circle for Dogs",
+                communityP1: "Share daily walking routes, healing moments, and funny memes. Every tail wag earns likes, and every pet care question gets answered by enthusiastic owners.",
+                communityP2: "Join local groups for weekend lawn parties, or just quietly browse others' pet diaries. On DogIsle, no one thinks you post too many dog pictures.",
+                communityBtn: "Enter Community Forum",
+                
+                marketTag: "Goodies Showcase",
+                marketTitle: "Bring the Best to Your Fur Kids",
+                shop1Title: "Indie Designer Merch",
+                shop1Desc: "Discover niche and beautiful leashes, tags, and handmade collars. Original items make your dog the coolest on the block.",
+                shop2Title: "Healthy Fresh Food",
+                shop2Desc: "Strictly selected healthy snacks and staple food. Transparent ingredients, no gimmicks, every bite is safe.",
+                shop3Title: "Creative Market",
+                shop3Desc: "Besides pet supplies, find handmade tote bags, stickers, and illustrations by owners. Support handcrafts and spread warmth.",
+                
+                tradeTag: "Eco-loop",
+                tradeTitle: "The Drift of Idle Goods",
+                tradeDesc: "Outgrown harnesses? Toys they don't play with? In the second-hand zone, let your idle items drift to the next pup. Low carbon, money-saving, and make friends!",
+                btnPublish: "Post Idle Item",
+                qrAppStore: "Scan to App",
+                qrMiniProgram: "Scan to Visit"
+            }
+        };
+
+        let currentLang = 'zh';
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'zh' ? 'en' : 'zh';
+            
+            document.getElementById('langToggle').innerText = currentLang === 'zh' ? 'EN' : '中';
+            document.title = i18nData[currentLang].pageTitle;
+
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (i18nData[currentLang][key]) {
+                    el.innerText = i18nData[currentLang][key];
+                }
+            });
+        }
+
+        // 移动端菜单逻辑
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        let isMenuOpen = false;
+
+        mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+
+        function toggleMobileMenu() {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                mobileMenu.classList.remove('opacity-0', 'pointer-events-none');
+                mobileMenu.classList.add('opacity-100', 'pointer-events-auto');
+                mobileMenuBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>';
+                document.body.style.overflow = 'hidden'; 
+            } else {
+                mobileMenu.classList.remove('opacity-100', 'pointer-events-auto');
+                mobileMenu.classList.add('opacity-0', 'pointer-events-none');
+                mobileMenuBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>';
+                document.body.style.overflow = ''; 
+            }
+        }
+
+        // 滚动揭示动画
+        document.addEventListener('DOMContentLoaded', () => {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15 
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            const revealElements = document.querySelectorAll('.reveal-on-scroll');
+            revealElements.forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>
