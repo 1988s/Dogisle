@@ -41,6 +41,7 @@
                         'float': 'float 4s ease-in-out infinite',
                         'float-delayed': 'float 4s ease-in-out 2s infinite',
                         'bounce-slow': 'bounce 3s infinite',
+                        'toast-enter': 'toastEnter 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
                     },
                     keyframes: {
                         fadeInUp: {
@@ -50,6 +51,10 @@
                         float: {
                             '0%, 100%': { transform: 'translateY(0)' },
                             '50%': { transform: 'translateY(-15px)' },
+                        },
+                        toastEnter: {
+                            '0%': { opacity: '0', transform: 'translate(-50%, 20px)' },
+                            '100%': { opacity: '1', transform: 'translate(-50%, 0)' },
                         }
                     }
                 }
@@ -91,7 +96,7 @@
         }
     </style>
 </head>
-<body class="bg-brand-bg text-brand-text font-sans antialiased overflow-x-hidden selection:bg-brand-accent selection:text-white">
+<body contenteditable="false" class="bg-brand-bg text-brand-text font-sans antialiased overflow-x-hidden selection:bg-brand-accent selection:text-white cursor-default">
 
     <!-- 顶部导航栏 -->
     <nav class="fixed top-0 w-full z-50 transition-all duration-300 bg-brand-bg/90 backdrop-blur-md border-b-4 border-brand-text">
@@ -146,12 +151,10 @@
             
             <!-- 左侧：文案区 -->
             <div class="opacity-0 animate-fade-in-up flex flex-col items-start text-center lg:text-left order-2 lg:order-1" style="animation-delay: 0.1s;">
-                <!-- 品牌标签 -->
                 <div class="inline-flex items-center space-x-2 px-4 py-2 rounded-full border-2 border-brand-text bg-white shadow-comic-sm mb-8 mx-auto lg:mx-0 transform -rotate-2 hover:rotate-0 transition-transform">
                     <span class="text-xs sm:text-sm font-black text-brand-accent tracking-widest uppercase" data-i18n="heroTag">Pets & Lifestyle Platform</span>
                 </div>
 
-                <!-- 标题 -->
                 <h1 class="font-display text-5xl sm:text-6xl md:text-7xl font-black leading-tight mb-6 text-brand-text drop-shadow-md">
                     <span data-i18n="heroTitle">欢迎登陆</span><br/>
                     <span class="text-brand-accent relative inline-block">
@@ -161,12 +164,10 @@
                     <span data-i18n="heroTitleEnd">狗岛！</span>
                 </h1>
 
-                <!-- 描述 -->
                 <p data-i18n="heroDesc" class="text-lg md:text-xl text-brand-text/80 leading-relaxed mb-10 max-w-lg mx-auto lg:mx-0 font-bold">
                     在这里，不仅能结交有趣的养宠主理人，还能逛集市、淘二手装备、购买独立设计的宠物好物。与毛孩子一起，开启岛屿新生活。
                 </p>
 
-                <!-- 按钮组 -->
                 <div class="flex flex-col sm:flex-row items-center gap-6 mx-auto lg:mx-0 w-full sm:w-auto">
                     <button class="w-full sm:w-auto px-8 py-4 bg-brand-accent text-brand-text border-4 border-brand-text rounded-2xl text-lg font-black hover:bg-brand-accentHover transition-all shadow-comic hover:shadow-comic-hover hover:translate-y-[2px] flex items-center justify-center gap-3">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><path d="M3 6h18"></path><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
@@ -182,11 +183,9 @@
 
             <!-- 右侧：核心插画图 -->
             <div class="relative order-1 lg:order-2 opacity-0 animate-fade-in-up" style="animation-delay: 0.3s;">
-                <!-- 装饰星星 -->
                 <div class="absolute -top-6 -left-6 w-12 h-12 text-brand-accent animate-spin-slow">
                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z"/></svg>
                 </div>
-                <!-- 主图容器 -->
                 <div class="relative w-full aspect-square md:aspect-[4/3] rounded-[2.5rem] md:rounded-[3rem] border-4 md:border-8 border-brand-text overflow-hidden shadow-comic bg-brand-sand transform rotate-2 hover:rotate-0 transition-transform duration-500 animate-float">
                     <img 
                         src="dogisle7.jpg" 
@@ -194,7 +193,6 @@
                         class="w-full h-full object-cover object-center"
                     />
                 </div>
-                <!-- 漂浮的小骨头装饰 -->
                 <div class="absolute -bottom-8 -right-4 bg-white border-4 border-brand-text rounded-full p-3 shadow-comic animate-float-delayed z-20 transform rotate-12">
                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor" class="text-brand-text"><path d="M10 5.172C10 3.782 8.423 2.679 6.5 3c-2.823.47-4.113 6.006-4 7 .08.703 1.725 1.722 3.656 1 1.261-.472 1.969-1.45 2.344-2.5"/><path d="M14.267 5.172c0-1.39 1.577-2.493 3.5-2.172 2.823.47 4.113 6.006 4 7-.08.703-1.725 1.722-3.656 1-1.261-.472-1.855-1.45-2.23-2.5"/><path d="M8 14v.5"/><path d="M16 14v.5"/><path d="M11.25 16.25h1.5L12 17l-.75-.75Z"/><path d="M4.42 11.247A13.152 13.152 0 0 0 4 14.556C4 18.728 7.582 21 12 21s8-2.272 8-6.444c0-1.061-.162-2.2-.493-3.309m-9.243-6.082A8.801 8.801 0 0 1 12 5c.78 0 1.5.108 2.161.306"/></svg>
                 </div>
@@ -215,7 +213,6 @@
             <span data-i18n="communityTag" class="inline-block px-4 py-2 bg-brand-blue border-2 border-brand-text rounded-full text-brand-text font-black text-sm mb-6 shadow-comic-sm transform -rotate-2">社交圈子</span>
             <h2 data-i18n="communityTitle" class="font-display text-4xl md:text-5xl font-black mb-8 text-brand-text">汪星人的专属朋友圈</h2>
             <div class="max-w-3xl mx-auto bg-white border-4 border-brand-text rounded-3xl p-8 md:p-12 shadow-comic text-left relative transform rotate-1">
-                <!-- 胶带装饰 -->
                 <div class="absolute -top-4 left-1/2 -translate-x-1/2 w-32 h-8 bg-brand-accent/50 border-2 border-brand-text transform -rotate-3 opacity-80 mix-blend-multiply"></div>
                 
                 <p data-i18n="communityP1" class="text-brand-text text-lg md:text-xl leading-relaxed mb-6 font-bold">分享每天的遛狗路线、治愈瞬间和搞怪表情包。在这里，每一次摇尾巴都能收获无数点赞，每一个养宠难题都能得到热心主理人的解答。</p>
@@ -237,7 +234,6 @@
                 <h2 data-i18n="marketTitle" class="font-display text-4xl md:text-5xl font-black mb-4">把最好的带给毛孩</h2>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
-                <!-- Card 1 -->
                 <div class="bg-white border-4 border-brand-text p-8 rounded-[2rem] shadow-comic hover:-translate-y-2 hover:shadow-comic-hover transition-all duration-300 relative mt-8 md:mt-0">
                     <div class="absolute -top-6 left-8 w-14 h-14 rounded-full bg-brand-accent border-4 border-brand-text flex items-center justify-center font-display font-black text-2xl text-white transform -rotate-6">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"></path><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
@@ -245,7 +241,6 @@
                     <h3 data-i18n="shop1Title" class="text-2xl font-black mb-4 mt-4">独立设计师周边</h3>
                     <p data-i18n="shop1Desc" class="text-brand-text/80 font-bold leading-relaxed text-lg">发掘小众又好看的牵引绳、狗牌和手工项圈。每件原创单品都能让你的狗狗成为街上最靓的仔。</p>
                 </div>
-                <!-- Card 2 -->
                 <div class="bg-brand-sand border-4 border-brand-text p-8 rounded-[2rem] shadow-comic hover:-translate-y-2 hover:shadow-comic-hover transition-all duration-300 relative mt-8 md:mt-12">
                     <div class="absolute -top-6 left-8 w-14 h-14 rounded-full bg-brand-blue border-4 border-brand-text flex items-center justify-center font-display font-black text-2xl text-brand-text transform rotate-3">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 12H16c-.7 2-2 3-4 3s-3.3-1-4-3H2.5"/><path d="M5.5 5.1L2 12v6c0 1.1.9 2 2 2h16a2 2 0 0 0 2-2v-6l-3.4-6.9A2 2 0 0 0 16.8 4H7.2a2 2 0 0 0-1.8 1.1z"/></svg>
@@ -253,7 +248,6 @@
                     <h3 data-i18n="shop2Title" class="text-2xl font-black mb-4 mt-4">自营健康鲜粮</h3>
                     <p data-i18n="shop2Desc" class="text-brand-text/80 font-bold leading-relaxed text-lg">狗岛严格选品的自营健康零食与主粮。透明成分配料表，拒绝智商税，每一口都是安心。</p>
                 </div>
-                <!-- Card 3 -->
                 <div class="bg-white border-4 border-brand-text p-8 rounded-[2rem] shadow-comic hover:-translate-y-2 hover:shadow-comic-hover transition-all duration-300 relative mt-8 md:mt-6">
                     <div class="absolute -top-6 left-8 w-14 h-14 rounded-full bg-brand-text border-4 border-brand-text flex items-center justify-center font-display font-black text-2xl text-white transform -rotate-12">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/><path d="M22 7v3a2 2 0 0 1-2 2v0a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12v0a2 2 0 0 1-2-2V7"/></svg>
@@ -269,7 +263,6 @@
     <section id="trade" class="py-24 md:py-32 w-full bg-brand-blue relative z-10 reveal-on-scroll">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="bg-white rounded-[3rem] p-8 md:p-16 flex flex-col md:flex-row items-center justify-between gap-12 border-4 border-brand-text shadow-comic relative overflow-hidden">
-                
                 <div class="max-w-lg relative z-10">
                     <span data-i18n="tradeTag" class="inline-block px-4 py-2 bg-brand-accent border-2 border-brand-text rounded-full text-brand-text font-black text-sm mb-6 shadow-comic-sm">环保循环圈</span>
                     <h2 data-i18n="tradeTitle" class="font-display text-4xl md:text-5xl font-black mb-6 text-brand-text">闲置物品的奇妙漂流</h2>
@@ -319,8 +312,9 @@
                 <span class="font-display font-black text-2xl tracking-wide">DogIsle</span>
             </div>
             <div class="flex gap-8 text-base font-bold text-white/80">
-                <!-- App Store 带悬浮二维码 -->
-                <a href="#" class="relative group hover:text-brand-accent transition-colors block">
+                
+                <!-- App Store 带悬浮二维码 & 跳转 -->
+                <a href="https://apps.apple.com/" target="_blank" class="relative group hover:text-brand-accent transition-colors block">
                     <span class="inline-block transform transition-transform group-hover:-translate-y-1">App Store</span>
                     <!-- 二维码弹窗 -->
                     <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-32 bg-white rounded-2xl shadow-comic p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-y-2 group-hover:translate-y-0 pointer-events-none z-50 border-4 border-brand-text flex flex-col items-center text-center">
@@ -328,14 +322,13 @@
                             <!-- 二维码占位 SVG -->
                             <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-brand-text"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg>
                         </div>
-                        <span class="text-brand-text text-xs font-black leading-none" data-i18n="qrAppStore">扫码下载</span>
-                        <!-- 指示箭头 -->
+                        <span class="text-brand-text text-xs font-black leading-none" data-i18n="qrAppStore">扫码或点击下载</span>
                         <div class="absolute -bottom-[10px] left-1/2 -translate-x-1/2 w-4 h-4 bg-white transform rotate-45 border-b-4 border-r-4 border-brand-text"></div>
                     </div>
                 </a>
 
-                <!-- 小程序 带悬浮二维码 -->
-                <a href="#" class="relative group hover:text-brand-accent transition-colors block">
+                <!-- 小程序 带悬浮二维码 & 点击复制功能 -->
+                <a href="#" onclick="copyMiniProgramName(event)" class="relative group hover:text-brand-accent transition-colors block">
                     <span class="inline-block transform transition-transform group-hover:-translate-y-1">小程序</span>
                     <!-- 二维码弹窗 -->
                     <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-32 bg-white rounded-2xl shadow-comic p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-y-2 group-hover:translate-y-0 pointer-events-none z-50 border-4 border-brand-text flex flex-col items-center text-center">
@@ -343,8 +336,7 @@
                             <!-- 二维码占位 SVG -->
                             <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-brand-text"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg>
                         </div>
-                        <span class="text-brand-text text-xs font-black leading-none" data-i18n="qrMiniProgram">扫码访问</span>
-                        <!-- 指示箭头 -->
+                        <span class="text-brand-text text-xs font-black leading-none" data-i18n="qrMiniProgram">扫码或点击复制</span>
                         <div class="absolute -bottom-[10px] left-1/2 -translate-x-1/2 w-4 h-4 bg-white transform rotate-45 border-b-4 border-r-4 border-brand-text"></div>
                     </div>
                 </a>
@@ -393,8 +385,8 @@
                 tradeTitle: "闲置物品的奇妙漂流",
                 tradeDesc: "狗狗长得太快穿不下的胸背带？买来却不爱玩的漏食球？在狗岛二手交易区，让你的闲置物品流转到下一只小狗的爪中。低碳、省钱，还能交个朋友！",
                 btnPublish: "发布闲置物品",
-                qrAppStore: "扫码下载",
-                qrMiniProgram: "扫码访问"
+                qrAppStore: "扫码或点击下载",
+                qrMiniProgram: "扫码或点击复制"
             },
             en: {
                 pageTitle: "DogIsle | Comprehensive Pet Community",
@@ -429,8 +421,8 @@
                 tradeTitle: "The Drift of Idle Goods",
                 tradeDesc: "Outgrown harnesses? Toys they don't play with? In the second-hand zone, let your idle items drift to the next pup. Low carbon, money-saving, and make friends!",
                 btnPublish: "Post Idle Item",
-                qrAppStore: "Scan to App",
-                qrMiniProgram: "Scan to Visit"
+                qrAppStore: "Scan/Click to Download",
+                qrMiniProgram: "Scan/Click to Copy"
             }
         };
 
@@ -449,6 +441,62 @@
                     el.innerText = i18nData[currentLang][key];
                 }
             });
+        }
+
+        // 复制小程序名称功能
+        function copyMiniProgramName(event) {
+            event.preventDefault(); // 阻止默认的 a 标签跳转
+            const textToCopy = "DogIsle狗岛"; 
+
+            // 创建隐藏的文本域来进行复制操作 (兼容性最好的写法)
+            const textArea = document.createElement("textarea");
+            textArea.value = textToCopy;
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.position = "fixed";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showToast('成功复制小程序名称: ' + textToCopy, 'success');
+                } else {
+                    showToast('复制失败，请手动搜索: ' + textToCopy, 'error');
+                }
+            } catch (err) {
+                showToast('复制失败，请手动搜索: ' + textToCopy, 'error');
+            }
+            document.body.removeChild(textArea);
+        }
+
+        // 自定义弹出提示 (Toast) 函数
+        function showToast(message, type = 'success') {
+            let existingToast = document.getElementById('copy-toast');
+            if (existingToast) existingToast.remove();
+
+            const toast = document.createElement('div');
+            toast.id = 'copy-toast';
+            toast.className = 'fixed bottom-10 left-1/2 -translate-x-1/2 bg-brand-accent text-brand-text px-6 py-3 rounded-2xl font-black shadow-comic z-[60] animate-toast-enter border-4 border-brand-text text-sm sm:text-base flex items-center gap-2';
+            
+            // SVG 图标定义
+            const successIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>`;
+            const errorIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>`;
+            
+            const iconSvg = type === 'success' ? successIcon : errorIcon;
+
+            toast.innerHTML = `${iconSvg} <span>${message}</span>`;
+
+            document.body.appendChild(toast);
+
+            // 2.5秒后消失
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translate(-50%, 20px)';
+                toast.style.transition = 'all 0.4s ease-out';
+                setTimeout(() => toast.remove(), 400);
+            }, 2500);
         }
 
         // 移动端菜单逻辑
